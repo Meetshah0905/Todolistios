@@ -1,0 +1,16 @@
+[build]
+  # This project is plain HTML/JS, so publish the repo root
+  publish = "."
+
+  # If you later add a build step (e.g. Vite/React), change command/publish accordingly:
+  # command = "npm run build"
+  # publish = "dist"
+
+# Route /api/* to Netlify Functions in netlify/functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+  force = true
+
+
