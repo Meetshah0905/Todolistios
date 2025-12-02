@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Habit Tracker</title>
+    <link rel="stylesheet" href="tracker.css">
+</head>
+<body class="habits-page">
+    <div class="habits-shell">
+        <header class="habits-header">
+            <a href="index.html" class="back-button" aria-label="Back to main page">← Back</a>
+            <div class="month-nav">
+                <button id="prevMonth" type="button">←</button>
+                <h1 id="monthTitle">Month</h1>
+                <button id="nextMonth" type="button">→</button>
+                <button id="jumpToday" type="button" class="ghost">Today</button>
+            </div>
+            <div class="summary">
+                <div class="summary-row">
+                    <span>Total habits</span>
+                    <strong id="totalHabits">0</strong>
+                </div>
+                <div class="summary-row">
+                    <span>Completions</span>
+                    <strong id="completedCount">0</strong>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="monthProgress" style="width:0%"></div>
+                    </div>
+                    <small id="progressLabel">0%</small>
+                </div>
+            </div>
+        </header>
+
+        <section class="controls">
+            <div>
+                <input type="text" id="newHabitInput" placeholder="Add a new habit…" aria-label="New habit name">
+                <button id="addHabitInline" class="primary" type="button">Add</button>
+            </div>
+            <button id="copyPrevBtn" class="ghost" type="button">Copy from Previous Month</button>
+            <button id="toggleStatsBtn" class="ghost" type="button">Monthly Stats</button>
+        </section>
+
+        <section class="grid-wrapper">
+            <div class="grid-weeks" id="gridWeeks"></div>
+            <div class="grid-days" id="gridHeaderDays"></div>
+            <div class="grid-rows" id="gridRows"></div>
+        </section>
+
+        <section class="dash-panels" id="dashPanels" hidden>
+            <div class="panel">
+                <h3>Mental State</h3>
+                <canvas id="mentalChart" width="600" height="140"></canvas>
+            </div>
+            <div class="panel" id="analysisPanel"></div>
+        </section>
+
+        <button class="fab" id="addHabitBtn" aria-label="Add habit">+</button>
+    </div>
+
+    <div class="day-panel" id="dayPanel" aria-hidden="true">
+        <div class="day-sheet">
+            <div class="day-header">
+                <button id="dayPrev" class="pill-btn" type="button">←</button>
+                <span id="dayLabel">Today</span>
+                <button id="dayNext" class="pill-btn" type="button">→</button>
+                <button id="dayClose" class="pill-btn" type="button">✕</button>
+            </div>
+            <ul class="day-list" id="dayHabitList"></ul>
+        </div>
+    </div>
+
+    <div class="stats-panel" id="statsPanel" aria-hidden="true">
+        <div class="day-sheet">
+            <div class="day-header">
+                <span>Monthly Statistics</span>
+                <button id="statsClose" class="pill-btn" type="button" aria-label="Close">✕</button>
+            </div>
+            <div id="statsContent"></div>
+        </div>
+    </div>
+
+    <div class="confirm-panel" id="confirmPanel" aria-hidden="true">
+        <div class="day-sheet">
+            <div class="day-header">
+                <span>Delete habit?</span>
+                <button id="confirmClose" class="pill-btn" type="button">✕</button>
+            </div>
+            <div class="confirm-actions">
+                <button id="confirmDelete" class="pill-btn" type="button">Delete</button>
+                <button id="confirmCancel" class="pill-btn" type="button">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="habitModal" aria-hidden="true">
+        <div class="modal-sheet">
+            <h2 id="modalTitle">New Habit</h2>
+            <form id="habitForm">
+                <input type="hidden" id="habitId">
+                <label class="field">
+                    <span>Name</span>
+                    <input type="text" id="habitName" placeholder="e.g. Morning run" required>
+                </label>
+                <label class="field">
+                    <span>Icon (optional)</span>
+                    <input type="text" id="habitIcon" placeholder="e.g. 🏃">
+                </label>
+                <label class="field">
+                    <span>Goal days</span>
+                    <input type="number" id="habitGoal" min="1" max="365" value="30">
+                </label>
+                <div class="modal-actions">
+                    <button type="button" id="cancelBtn" class="ghost">Cancel</button>
+                    <button type="button" id="deleteBtn" class="danger">Delete</button>
+                    <button type="submit" class="primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="tracker.js"></script>
+</body>
+</html>

@@ -1,0 +1,1204 @@
+/* ============================================
+   MOBILE-FIRST HABIT TRACKER - FUTURISTIC GLASS DESIGN
+   ============================================ */
+
+.habits-page {
+  /* Design Tokens */
+  --bg: #0a0a0a;
+  --bg-gradient: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 50%, #0a0a0a 100%);
+  --panel: rgba(18, 19, 27, 0.7);
+  --panel-glass: rgba(11, 13, 23, 0.85);
+  --panel-border: rgba(255, 255, 255, 0.12);
+  --text: #f2f4ff;
+  --text-dim: #8790a7;
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --accent: linear-gradient(135deg, #79c7ff, #8af5d2);
+  --accent-solid: #79c7ff;
+  --accent-hover: linear-gradient(135deg, #8dd0ff, #9fffe0);
+  --success: #2ad66f;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-full: 999px;
+  --shadow-sm: 0 4px 12px rgba(5, 6, 10, 0.3);
+  --shadow-md: 0 8px 24px rgba(5, 6, 10, 0.4);
+  --shadow-lg: 0 15px 30px rgba(5, 6, 10, 0.45);
+  --blur-sm: blur(6px);
+  --blur-md: blur(12px);
+  --blur-lg: blur(20px);
+  
+  /* Spacing Scale */
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+  
+  /* Typography */
+  --font-size-xs: clamp(0.75rem, 2vw, 0.875rem);
+  --font-size-sm: clamp(0.875rem, 2.5vw, 1rem);
+  --font-size-base: clamp(1rem, 3vw, 1.125rem);
+  --font-size-lg: clamp(1.25rem, 4vw, 1.5rem);
+  --font-size-xl: clamp(1.5rem, 5vw, 2rem);
+  
+  /* Touch Targets */
+  --touch-target: 44px;
+  
+  /* Base Styles */
+  background: var(--bg-gradient);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100dvh;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* ============================================
+   LAYOUT CONTAINER
+   ============================================ */
+
+.habits-page .habits-shell {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: calc(var(--space-3) + env(safe-area-inset-top)) 
+           clamp(var(--space-2), 4vw, var(--space-4)) 
+           calc(100px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+}
+
+/* ============================================
+   HEADER - MONTH NAVIGATION
+   ============================================ */
+
+.habits-page .habits-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.habits-page .back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-2);
+  color: var(--text);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--panel-border);
+  transition: all 0.2s ease;
+  min-height: var(--touch-target);
+  width: fit-content;
+  touch-action: manipulation;
+}
+
+.habits-page .back-button:hover,
+.habits-page .back-button:active {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(0.98);
+}
+
+.habits-page .month-nav {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-2);
+  position: sticky;
+  top: calc(env(safe-area-inset-top) + var(--space-1));
+  z-index: 20;
+  background: rgba(5, 6, 10, 0.6);
+  backdrop-filter: var(--blur-sm);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  margin: calc(-1 * var(--space-2));
+  margin-bottom: 0;
+}
+
+.habits-page .month-nav h1 {
+  text-align: center;
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.habits-page .month-nav button {
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  border: 1px solid var(--panel-border);
+  background: var(--panel-glass);
+  backdrop-filter: var(--blur-sm);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 0;
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+}
+
+.habits-page .month-nav button:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.habits-page .month-nav button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.habits-page .month-nav .ghost {
+  background: transparent;
+  border-color: transparent;
+  grid-column: 1 / -1;
+  justify-self: end;
+  margin-top: var(--space-1);
+}
+
+/* ============================================
+   STATS SUMMARY CARD
+   ============================================ */
+
+.habits-page .summary {
+  background: var(--panel-glass);
+  backdrop-filter: var(--blur-sm);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+  box-shadow: var(--shadow-sm);
+}
+
+.habits-page .summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-dim);
+  font-size: var(--font-size-sm);
+}
+
+.habits-page .summary-row strong {
+  color: var(--text);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+}
+
+.habits-page .progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.habits-page .progress-bar {
+  flex: 1;
+  height: 10px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  position: relative;
+}
+
+.habits-page .progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #7ac4ff, #8effbf, #faf7b0);
+  border-radius: var(--radius-full);
+  transition: width 0.3s ease;
+}
+
+.habits-page .progress small {
+  color: var(--text-dim);
+  font-size: var(--font-size-xs);
+  min-width: 40px;
+  text-align: right;
+}
+
+/* ============================================
+   CONTROLS SECTION
+   ============================================ */
+
+.habits-page .controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--panel-glass);
+  backdrop-filter: var(--blur-sm);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  box-shadow: var(--shadow-sm);
+}
+
+.habits-page .controls > *:first-child {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.habits-page .controls input {
+  flex: 1;
+  min-width: 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-base);
+  min-height: var(--touch-target);
+  transition: all 0.2s ease;
+}
+
+.habits-page .controls input:focus {
+  outline: none;
+  border-color: var(--accent-solid);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(121, 199, 255, 0.1);
+}
+
+.habits-page .controls .primary {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  background: var(--accent);
+  color: #07111c;
+  font-weight: 700;
+  font-size: var(--font-size-base);
+  min-height: var(--touch-target);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+
+.habits-page .controls .primary:active {
+  transform: scale(0.98);
+  background: var(--accent-hover);
+}
+
+.habits-page .controls .ghost {
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  background: transparent;
+  color: var(--text);
+  font-size: var(--font-size-sm);
+  min-height: var(--touch-target);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+  width: 100%;
+  text-align: center;
+}
+
+.habits-page .controls .ghost:active {
+  background: rgba(255, 255, 255, 0.06);
+  transform: scale(0.98);
+}
+
+/* ============================================
+   HABIT GRID - MOBILE FIRST (WEEK STRIP)
+   ============================================ */
+
+.habits-page .grid-wrapper {
+  margin-top: var(--space-2);
+  background: var(--panel-glass);
+  backdrop-filter: var(--blur-sm);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  overflow: visible;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Week Navigation Controls */
+.habits-page .week-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.habits-page .week-nav button {
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  border: 1px solid var(--panel-border);
+  background: var(--panel-glass);
+  backdrop-filter: var(--blur-sm);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 0;
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+}
+
+.habits-page .week-nav button:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.habits-page .week-nav button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.habits-page .week-nav .week-label {
+  flex: 1;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+/* Day Header Strip */
+.habits-page .grid-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: clamp(4px, 1.5vw, var(--space-1));
+  margin-bottom: var(--space-2);
+  width: 100%;
+  min-width: 0;
+}
+
+.habits-page .grid-day {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.habits-page .grid-day.today {
+  color: var(--text);
+  background: rgba(121, 199, 255, 0.15);
+  border: 1px solid rgba(121, 199, 255, 0.3);
+}
+
+/* Habit Rows - Mobile Layout */
+.habits-page .grid-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  overflow: visible;
+}
+
+.habits-page .row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: var(--blur-sm);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: visible;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.habits-page .row:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.habits-page .row .label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-weight: 700;
+  font-size: var(--font-size-base);
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.habits-page .row .label .habit-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.habits-page .row .label .habit-actions {
+  display: flex;
+  gap: var(--space-1);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.habits-page .row .label .menu-btn {
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 0;
+  cursor: pointer;
+  font-size: var(--font-size-xl);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+  position: relative;
+  z-index: 1;
+}
+
+.habits-page .row .label .menu-btn:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Day Checkboxes Strip */
+.habits-page .row .cells {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: clamp(4px, 1.5vw, var(--space-1));
+  width: 100%;
+  min-width: 0;
+}
+
+.habits-page .check {
+  width: 100%;
+  aspect-ratio: 1;
+  min-width: clamp(36px, 8vw, var(--touch-target));
+  min-height: clamp(36px, 8vw, var(--touch-target));
+  max-width: 100%;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.habits-page .check::after {
+  content: '✓';
+  opacity: 0;
+  color: #07111c;
+  font-weight: 700;
+  font-size: clamp(0.875rem, 3vw, var(--font-size-base));
+  transition: opacity 0.2s ease;
+  line-height: 1;
+}
+
+.habits-page .check.done {
+  background: var(--success);
+  border-color: var(--success);
+}
+
+.habits-page .check.done::after {
+  opacity: 1;
+}
+
+.habits-page .check.today {
+  outline: 2px solid var(--accent-solid);
+  outline-offset: 2px;
+}
+
+.habits-page .check:active {
+  transform: scale(0.9);
+}
+
+/* Hide week labels on mobile */
+.habits-page .grid-weeks {
+  display: none;
+}
+
+/* ============================================
+   DESKTOP: MONTH VIEW
+   ============================================ */
+
+@media (min-width: 768px) {
+  .habits-page .week-nav {
+    display: none;
+  }
+  
+  .habits-page .grid-wrapper {
+    overflow: visible;
+  }
+  
+  .habits-page .grid-weeks {
+    display: grid;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+    overflow: hidden;
+  }
+  
+  .habits-page .grid-days {
+    display: grid;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+    overflow: hidden;
+  }
+  
+  .habits-page .grid-rows {
+    overflow-x: auto;
+    padding-bottom: var(--space-2);
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .habits-page .row {
+    display: grid;
+    grid-template-columns: 200px repeat(var(--days-count, 31), minmax(44px, 1fr));
+    gap: var(--space-2);
+    align-items: center;
+    padding: var(--space-2);
+  }
+  
+  .habits-page .row .label {
+    position: sticky;
+    left: 0;
+    background: var(--panel-glass);
+    backdrop-filter: var(--blur-sm);
+    padding-right: var(--space-2);
+    z-index: 1;
+  }
+  
+  .habits-page .row .cells {
+    display: contents;
+  }
+  
+  .habits-page .check {
+    width: 44px;
+    height: 44px;
+    margin: 0 auto;
+  }
+  
+  .habits-page .grid-day.snap,
+  .habits-page .check.snap {
+    scroll-snap-align: start;
+  }
+  
+  /* Sync scroll for headers */
+  .habits-page .grid-rows {
+    scroll-snap-type: x mandatory;
+  }
+}
+
+/* ============================================
+   MENTAL STATE CHART
+   ============================================ */
+
+.habits-page .dash-panels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.habits-page .panel {
+  background: var(--panel-glass);
+  backdrop-filter: var(--blur-sm);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  box-shadow: var(--shadow-sm);
+}
+
+.habits-page .panel h3 {
+  margin: 0 0 var(--space-2) 0;
+  font-size: var(--font-size-base);
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.habits-page #mentalChart {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  max-height: 200px;
+  display: block;
+}
+
+.habits-page .analysis-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+}
+
+.habits-page .analysis-item > span {
+  flex: 0 0 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-sm);
+}
+
+.habits-page .analysis-item > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.habits-page .bar {
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  width: 100%;
+}
+
+.habits-page .bar > span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #79c7ff, #8af5d2);
+  border-radius: var(--radius-full);
+  transition: width 0.3s ease;
+}
+
+/* ============================================
+   FLOATING ACTION BUTTON
+   ============================================ */
+
+.habits-page .fab {
+  position: fixed;
+  right: clamp(var(--space-3), 4vw, var(--space-4));
+  bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
+  width: 56px;
+  height: 56px;
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: #07111c;
+  font-weight: 800;
+  font-size: var(--font-size-xl);
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 30;
+  touch-action: manipulation;
+}
+
+.habits-page .fab:active {
+  transform: scale(0.95);
+  box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   MODALS & BOTTOM SHEETS
+   ============================================ */
+
+.habits-page .modal,
+.habits-page .day-panel,
+.habits-page .stats-panel,
+.habits-page .confirm-panel {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(5, 6, 10, 0.7);
+  backdrop-filter: var(--blur-md);
+  z-index: 50;
+  padding: 0;
+}
+
+.habits-page .modal.open,
+.habits-page .day-panel.open,
+.habits-page .stats-panel.open,
+.habits-page .confirm-panel.open {
+  display: flex;
+}
+
+.habits-page .modal-sheet,
+.habits-page .day-sheet {
+  width: 100%;
+  max-width: 720px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--panel-glass);
+  backdrop-filter: var(--blur-lg);
+  border: 1px solid var(--panel-border);
+  border-bottom: none;
+  color: var(--text);
+  padding: calc(var(--space-3) + env(safe-area-inset-top)) 
+           var(--space-3) 
+           calc(var(--space-3) + env(safe-area-inset-bottom));
+  max-height: 85vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+@media (min-width: 640px) {
+  .habits-page .modal {
+    align-items: center;
+  }
+  
+  .habits-page .modal-sheet {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--panel-border);
+    max-height: 90vh;
+    padding: var(--space-4);
+  }
+}
+
+.habits-page .day-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: inherit;
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-2);
+  border-bottom: 1px solid var(--panel-border);
+  z-index: 1;
+}
+
+.habits-page .day-header span {
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+  flex: 1;
+}
+
+.habits-page .day-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+}
+
+.habits-page .day-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: var(--blur-sm);
+}
+
+.habits-page .day-name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 700;
+  font-size: var(--font-size-base);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.habits-page .day-toggle {
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  border-radius: var(--radius-full);
+  padding: var(--space-2) var(--space-3);
+  min-height: var(--touch-target);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+
+.habits-page .day-toggle.done {
+  background: var(--success);
+  color: #07111c;
+  border-color: var(--success);
+}
+
+.habits-page .day-toggle:active {
+  transform: scale(0.98);
+}
+
+.habits-page .pill-btn {
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  border-radius: var(--radius-full);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  min-height: var(--touch-target);
+  touch-action: manipulation;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.habits-page .pill-btn:active {
+  transform: scale(0.98);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   HABIT MODAL FORM
+   ============================================ */
+
+.habits-page .modal-sheet h2 {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+}
+
+.habits-page .field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.habits-page .field span {
+  font-size: var(--font-size-sm);
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.habits-page .field input {
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-base);
+  min-height: var(--touch-target);
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.habits-page .field input:focus {
+  outline: none;
+  border-color: var(--accent-solid);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(121, 199, 255, 0.1);
+}
+
+.habits-page .modal-actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin-top: var(--space-2);
+}
+
+.habits-page .modal-actions .ghost {
+  border: 1px solid var(--panel-border);
+  background: transparent;
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  min-height: var(--touch-target);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+}
+
+.habits-page .modal-actions .ghost:active {
+  background: rgba(255, 255, 255, 0.06);
+  transform: scale(0.98);
+}
+
+.habits-page .modal-actions .danger {
+  border: 1px solid rgba(255, 120, 120, 0.5);
+  background: rgba(255, 120, 120, 0.15);
+  color: #ffdede;
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  min-height: var(--touch-target);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+}
+
+.habits-page .modal-actions .danger:active {
+  background: rgba(255, 120, 120, 0.25);
+  transform: scale(0.98);
+}
+
+.habits-page .modal-actions .primary {
+  border: none;
+  background: var(--accent);
+  color: #07111c;
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  min-height: var(--touch-target);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+}
+
+.habits-page .modal-actions .primary:active {
+  background: var(--accent-hover);
+  transform: scale(0.98);
+}
+
+.habits-page .confirm-actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+  padding-top: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* ============================================
+   MONTHLY STATISTICS MODAL
+   ============================================ */
+
+.habits-page .stats-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+@media (max-width: 640px) {
+  .habits-page .stats-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.habits-page .stat-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  transition: all 0.2s ease;
+}
+
+.habits-page .stat-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.habits-page .stat-card > div:first-child {
+  color: var(--text-dim);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.habits-page .stat-card > div:last-child {
+  color: var(--text);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+}
+
+.habits-page .year-overview {
+  margin-top: var(--space-4);
+}
+
+.habits-page .year-overview h3 {
+  color: var(--text);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  margin: 0 0 var(--space-3) 0;
+}
+
+.habits-page .months-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-2);
+}
+
+@media (max-width: 640px) {
+  .habits-page .months-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.habits-page .month-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2);
+  color: var(--text);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-height: var(--touch-target);
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+.habits-page .month-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.habits-page .month-btn.active {
+  background: rgba(42, 214, 111, 0.15);
+  border-color: #2ad66f;
+  color: #2ad66f;
+}
+
+.habits-page .month-btn > div:first-child {
+  font-weight: 600;
+}
+
+.habits-page .month-btn > div:last-child {
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+}
+
+/* ============================================
+   ACCESSIBILITY & REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .habits-page *,
+  .habits-page *::before,
+  .habits-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus visible for keyboard navigation */
+.habits-page button:focus-visible,
+.habits-page input:focus-visible {
+  outline: 2px solid var(--accent-solid);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   HABIT MENU DROPDOWN
+   ============================================ */
+
+.habits-page .habit-menu {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  right: 0;
+  background: var(--panel-glass);
+  backdrop-filter: var(--blur-md);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 140px;
+  box-shadow: var(--shadow-lg);
+  margin-top: var(--space-1);
+}
+
+@media (max-width: 640px) {
+  .habits-page .habit-menu {
+    right: auto;
+    left: 0;
+    min-width: 160px;
+  }
+}
+
+.habits-page .habit-menu button {
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  min-height: var(--touch-target);
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+}
+
+.habits-page .habit-menu button:hover,
+.habits-page .habit-menu button:active {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.habits-page .habit-menu button:last-child {
+  color: #ff7878;
+}
+
+.habits-page .habit-menu button:last-child:hover,
+.habits-page .habit-menu button:last-child:active {
+  background: rgba(255, 120, 120, 0.15);
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.habits-page .empty {
+  text-align: center;
+  color: var(--text-dim);
+  padding: var(--space-6);
+  font-size: var(--font-size-sm);
+}
