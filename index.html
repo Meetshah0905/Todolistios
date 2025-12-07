@@ -19,7 +19,7 @@
                     <span id="userBalance" class="amount">0</span>
                 </div>
             </div>
-            <div class="date-badge" id="currentDate">Today</div>
+            <button class="reset-btn" id="resetDataBtn" title="Reset Data">↻</button>
         </header>
 
         <section id="view-tasks" class="app-view active">
@@ -30,7 +30,7 @@
 
             <div class="input-card">
                 <label class="field-label">Task Title</label>
-                <input type="text" id="taskInput" placeholder="e.g. 10k Steps Walk" autocomplete="off">
+                <input type="text" id="taskInput" placeholder="e.g. Walking 10000 steps" autocomplete="off">
                 
                 <label class="field-label">Notes (Optional)</label>
                 <input type="text" id="taskNote" placeholder="Add context or links..." class="secondary-input">
@@ -55,7 +55,7 @@
                 </div>
 
                 <div id="aiSuggestion" class="ai-badge" style="display: none;">
-                    ✨ AI Suggestion: <span id="aiPoints">0</span> Points
+                    ✨ AI Value: <span id="aiPoints">0</span> Points
                 </div>
 
                 <button class="primary-btn" id="addTaskBtn">Add Task</button>
@@ -80,7 +80,9 @@
                 <p>Redeem your hard work.</p>
             </div>
             <div class="input-card small">
+                <label class="field-label">Wish Item</label>
                 <input type="text" id="wishInput" placeholder="Item name (e.g. iPhone 17)">
+                <label class="field-label">Cost</label>
                 <input type="number" id="wishCost" placeholder="Cost in coins">
                 <button class="primary-btn" id="addWishBtn">Add to Wishlist</button>
             </div>
