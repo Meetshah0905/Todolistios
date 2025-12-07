@@ -1,240 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Celestial Tasks</title>
+    <title>Focus OS</title>
     <link rel="stylesheet" href="styles.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
-
 <body>
     <div class="app-shell">
-        <header class="app-header">
-            <div class="header-main">
-                <div>
-                    <p class="app-eyebrow">ㅤㅤLow, Depressed, Anxious, Stressed 
-                    </p>
-                    <h1>ㅤㅤ💷 Just do it daily </h1>
-                </div>
-                <div class="progress-summary">
-                    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
-                        aria-valuenow="0">
-                        <div class="progress-fill" id="progressFill">
-                            <div class="progress-glow"></div>
-                        </div>
-                    </div>
-                    <div class="progress-percent">
-                        <span id="progressPercent">0%</span>
-                        <p class="progress-meta" id="progressMeta">Total 0 • Active 0 • Done 0 • Cancelled 0</p>
-                    </div>
-                </div>
-                <section class="time-budget-card" aria-live="polite">
-                    <div class="time-slot total">
-                        <div class="slot-label">
-                            <span aria-hidden="true">⏱</span>
-                            <span>Total Estimated</span>
-                        </div>
-                        <p class="slot-value" id="timeTotal">0m</p>
-                    </div>
-                    <div class="time-slot available">
-                        <div class="slot-label">Available</div>
-                        <label class="available-input" for="availableHoursInput">
-                            <input type="number" id="availableHoursInput" min="0" max="24" step="0.5"
-                                inputmode="decimal" aria-label="Available focus hours">
-                            <span>H</span>
-                        </label>
-                    </div>
-                    <div class="time-slot remaining" id="remainingSlot">
-                        <div class="slot-label">Remaining</div>
-                        <p class="slot-value" id="timeRemaining">0m</p>
-                    </div>
-                </section>
+        
+        <header class="header-top">
+            <div>
+                <div class="date-badge" id="currentDate">Sunday, Dec 7th</div>
+                <div class="greeting">Hello, User</div>
             </div>
-            <form id="taskForm">
-                <label class="field">
-                    <span>Task title</span>
-                    <input type="text" id="taskTitle" placeholder="e.g. Deep work sprint" required>
-                </label>
-                <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-                    <a href="habits.html" class="open-habits-btn">Habit Tracker</a>
-                    <a href="habits.html?stats=true" class="open-habits-btn" style="font-size: 0.875rem; padding: 10px 18px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); min-height: 44px; display: inline-flex; align-items: center; justify-content: center;">📊 Monthly Stats</a>
-                </div>
-                <label class="field">
-                    <span>Notes</span>
-                    <textarea id="taskNote" rows="1" placeholder="Add context or links (optional)"></textarea>
-                </label>
-                <div class="field duration-field">
-                    <div>
-                        <span>Est. Focus Time</span>
-                        <div class="duration-inputs">
-                            <label>
-                                <input type="number" id="taskHours" min="0" max="12" value="0">
-                                <small>hrs</small>
-                            </label>
-                            <label>
-                                <input type="number" id="taskMinutes" min="0" max="55" step="5" value="25">
-                                <small>min</small>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="priority-selector" role="group" aria-label="Priority quadrant">
-                        <button type="button" class="priority-chip active" data-priority="IU">
-                            <strong>IU</strong><small>Important • Urgent</small>
-                        </button>
-                        <button type="button" class="priority-chip" data-priority="IBNU">
-                            <strong>IBNU</strong><small>Important • Not urgent</small>
-                        </button>
-                        <button type="button" class="priority-chip" data-priority="NIBU">
-                            <strong>NIBU</strong><small>Not important • Urgent</small>
-                        </button>
-                        <button type="button" class="priority-chip" data-priority="NINU">
-                            <strong>NINU</strong><small>Not important • Not urgent</small>
-                        </button>
-                    </div>
-                </div>
-                <button class="primary-btn" id="addTaskBtn" type="submit">Add Task</button>
-            </form>
-            </section>
-
-            <section class="date-navigation">
-                <button id="datePrev" class="date-nav-btn" type="button" aria-label="Previous day">← Previous</button>
-                <button id="dateToday" class="date-nav-btn" type="button" aria-label="Go to today">Today</button>
-                <button id="dateNext" class="date-nav-btn" type="button" aria-label="Next day">Next →</button>
-                <span id="dateDisplay" class="date-display">Today</span>
-            </section>
-
-            <section class="task-list-wrapper">
-                <ul class="task-list" id="taskList"></ul>
-                <div class="empty-state" id="emptyState">
-                    <img src="https://assets.codepen.io/3685267/empty-space-illustration.png" alt="" loading="lazy">
-                    <p>No tasks orbiting right now.</p>
-                    <small>Add one above to start tracking.</small>
-                </div>
-            </section>
-            </main>
-
-            <button class="fab" id="fabAdd" aria-label="Add task quick action">
-                <span>+</span>
+            <button class="settings-btn" aria-label="Settings">
+                <ion-icon name="options-outline"></ion-icon>
             </button>
-    </div>
+        </header>
 
-    <div class="celebration" id="celebration" aria-hidden="true">
-        <div class="party-layer balloon-layer" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <div class="party-layer confetti-layer" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <div class="party-layer spark-layer" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <div class="celebration-card">
-            <div class="celebration-icon">
-                <span class="spark"></span>
-                <img src="https://assets.codepen.io/3685267/celebration-badge.svg" alt="">
-            </div>
-            <h2>All tasks cleared for today!</h2>
-            <p>Enjoy the calm orbit—you’ve earned it.</p>
-            <button id="celebrationClose">Nice!</button>
-        </div>
-    </div>
-
-    <template id="taskTemplate">
-        <li class="task-item" draggable="true">
-            <div class="task-handle" aria-hidden="true">
-                <span></span><span></span><span></span>
-            </div>
-            <div class="task-content-wrapper">
-                <div class="task-content">
-                    <div class="task-header">
-                        <span class="task-pill"></span>
-                        <h3 class="task-title"></h3>
-                    </div>
-                    <p class="task-note"></p>
-                    <div class="task-meta">
-                        <span class="task-duration"></span>
-                        <span class="task-created"></span>
-                    </div>
+        <div class="streak-card">
+            <div class="streak-content">
+                <div class="fire-icon-wrapper">
+                    <ion-icon name="flame"></ion-icon>
                 </div>
-                <div class="task-actions">
-                    <button class="ghost-btn task-move" type="button" title="Move task">📅</button>
-                    <button class="ghost-btn task-edit" type="button" title="Edit task">✎</button>
-                    <button class="ghost-btn task-delete" type="button" title="Delete task">🗑</button>
+                <div class="streak-text">
+                    <h2 id="streakCount">0</h2>
+                    <span>Day Streak</span>
+                </div>
+                <div class="streak-chart-placeholder">
+                   <ion-icon name="trending-up-outline" style="font-size: 40px; color: #333;"></ion-icon>
                 </div>
             </div>
-            <button class="task-checkbox" aria-label="Toggle completion"></button>
-        </li>
+            <div class="streak-bar-container">
+                <div class="streak-bar-fill" id="dailyProgressFill" style="width: 0%"></div>
+            </div>
+            <p class="streak-sub">Complete daily goals to keep the flame alive.</p>
+        </div>
+
+        <div id="routinesContainer">
+            </div>
+
+        <button class="fab" onclick="toggleAddMenu()">
+            <ion-icon name="add"></ion-icon>
+        </button>
+    </div>
+
+    <template id="routineTemplate">
+        <div class="routine-card">
+            <div class="routine-header">
+                <div class="progress-circle">0/0</div>
+                <div class="routine-info">
+                    <span class="routine-title"></span>
+                    <span class="routine-time"></span>
+                </div>
+                <div class="chevron">
+                    <ion-icon name="chevron-down-outline"></ion-icon>
+                </div>
+            </div>
+            <div class="routine-tasks">
+                </div>
+        </div>
     </template>
 
-    <div class="move-panel" id="movePanel" aria-hidden="true">
-        <div class="move-panel-sheet" role="dialog" aria-labelledby="movePanelTitle" aria-modal="true">
-            <div class="move-panel-header">
-                <h2 id="movePanelTitle">Move task to</h2>
-                <button class="ghost-btn move-close" type="button" id="moveClose"
-                    aria-label="Close move panel">✕</button>
-            </div>
-            <p class="move-panel-subtext">Pick a date to reschedule this task.</p>
-            <div class="move-panel-actions">
-                <button class="pill-btn" type="button" id="moveTodayBtn">Move to Today</button>
-            </div>
-            <label class="move-date-field">
-                <span>Pick a date</span>
-                <input type="date" id="moveDateInput">
-            </label>
-            <div class="move-calendar">
-                <div class="calendar-header">
-                    <button class="calendar-nav" type="button" id="calendarPrev" aria-label="Previous month">←</button>
-                    <span class="calendar-month" id="calendarMonthLabel">October 2025</span>
-                    <button class="calendar-nav" type="button" id="calendarNext" aria-label="Next month">→</button>
-                </div>
-                <div class="calendar-weekdays">
-                    <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
-                </div>
-                <div class="calendar-grid" id="calendarGrid" role="grid"></div>
-            </div>
-            <button class="primary-btn move-confirm" type="button" id="moveConfirmBtn">Move</button>
+    <template id="taskTemplate">
+        <div class="task-row">
+            <div class="check-circle"></div>
+            <span class="task-name"></span>
+            <span class="tag-must-do" style="display: none;">MUST DO</span>
         </div>
-    </div>
+    </template>
+
+    <template id="readingTemplate">
+        <div class="reading-controls">
+            <div class="reading-stats">
+                <span class="pages-read">Page <span class="curr-page">0</span></span>
+                <span class="pages-goal">Goal: <span class="goal-page">0</span></span>
+            </div>
+            <input type="range" class="reading-slider" min="0" value="0">
+        </div>
+    </template>
 
     <script src="app.js"></script>
 </body>
-
 </html>
