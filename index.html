@@ -19,7 +19,7 @@
                     <span id="userBalance" class="amount">0</span>
                 </div>
             </div>
-            <div class="date-badge" id="currentDate">Dec 7th</div>
+            <div class="date-badge" id="currentDate">Today</div>
         </header>
 
         <section id="view-tasks" class="app-view active">
@@ -29,13 +29,36 @@
             </div>
 
             <div class="input-card">
-                <input type="text" id="taskInput" placeholder="e.g. Deep work sprint" autocomplete="off">
-                <div class="tag-selector">
-                    <button class="tag-btn active" data-priority="High">High</button>
-                    <button class="tag-btn" data-priority="Medium">Med</button>
-                    <button class="tag-btn" data-priority="Low">Low</button>
+                <label class="field-label">Task Title</label>
+                <input type="text" id="taskInput" placeholder="e.g. 10k Steps Walk" autocomplete="off">
+                
+                <label class="field-label">Notes (Optional)</label>
+                <input type="text" id="taskNote" placeholder="Add context or links..." class="secondary-input">
+
+                <div class="row-inputs">
+                    <div class="time-input-group">
+                        <label>Est. Time</label>
+                        <div class="time-inputs">
+                            <input type="number" id="taskHrs" placeholder="0" min="0"> <span>h</span>
+                            <input type="number" id="taskMins" placeholder="30" min="0" step="5"> <span>m</span>
+                        </div>
+                    </div>
+                    
+                    <div class="priority-group">
+                        <label>Priority</label>
+                        <div class="tag-selector">
+                            <button class="tag-btn active" data-priority="High">High</button>
+                            <button class="tag-btn" data-priority="Medium">Med</button>
+                            <button class="tag-btn" data-priority="Low">Low</button>
+                        </div>
+                    </div>
                 </div>
-                <button class="primary-btn" onclick="app.addTask()">Add Task (+50 🪙)</button>
+
+                <div id="aiSuggestion" class="ai-badge" style="display: none;">
+                    ✨ AI Suggestion: <span id="aiPoints">0</span> Points
+                </div>
+
+                <button class="primary-btn" id="addTaskBtn">Add Task</button>
             </div>
 
             <div id="taskList" class="task-list">
@@ -47,11 +70,8 @@
                 <h1>Liquid Library</h1>
                 <p>Read to earn. Grow your mind.</p>
             </div>
-
-            <button class="secondary-btn" onclick="app.toggleBookModal()">+ Add New Book</button>
-
-            <div id="bookGrid" class="book-grid">
-                </div>
+            <button class="secondary-btn" id="openBookModalBtn">+ Add New Book</button>
+            <div id="bookGrid" class="book-grid"></div>
         </section>
 
         <section id="view-wishlist" class="app-view">
@@ -59,27 +79,24 @@
                 <h1>Wishlist Store</h1>
                 <p>Redeem your hard work.</p>
             </div>
-
-            <div class="input-card">
-                <input type="text" id="wishInput" placeholder="Item name (e.g. iPhone 17 Pro)">
-                <input type="number" id="wishCost" placeholder="Cost in coins (e.g. 5000)">
-                <button class="primary-btn" onclick="app.addWishItem()">Add to Wishlist</button>
+            <div class="input-card small">
+                <input type="text" id="wishInput" placeholder="Item name (e.g. iPhone 17)">
+                <input type="number" id="wishCost" placeholder="Cost in coins">
+                <button class="primary-btn" id="addWishBtn">Add to Wishlist</button>
             </div>
-
-            <div id="wishGrid" class="wish-grid">
-                </div>
+            <div id="wishGrid" class="wish-grid"></div>
         </section>
 
         <nav class="bottom-nav">
-            <button class="nav-item active" onclick="app.switchView('view-tasks')">
+            <button class="nav-item active" data-target="view-tasks">
                 <ion-icon name="checkbox"></ion-icon>
                 <span>Tasks</span>
             </button>
-            <button class="nav-item" onclick="app.switchView('view-library')">
+            <button class="nav-item" data-target="view-library">
                 <ion-icon name="book"></ion-icon>
                 <span>Library</span>
             </button>
-            <button class="nav-item" onclick="app.switchView('view-wishlist')">
+            <button class="nav-item" data-target="view-wishlist">
                 <ion-icon name="cart"></ion-icon>
                 <span>Wishlist</span>
             </button>
@@ -94,8 +111,8 @@
             <input type="text" id="bookAuthor" placeholder="Author">
             <input type="number" id="bookPages" placeholder="Total Pages">
             <div class="modal-actions">
-                <button class="cancel-btn" onclick="app.toggleBookModal()">Cancel</button>
-                <button class="confirm-btn" onclick="app.addBook()">Add Book</button>
+                <button class="cancel-btn" id="closeBookModalBtn">Cancel</button>
+                <button class="confirm-btn" id="confirmAddBookBtn">Add Book</button>
             </div>
         </div>
     </div>
