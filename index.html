@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>Focus OS</title>
+    <title>Focus OS: Gamified</title>
     <link rel="stylesheet" href="styles.css">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
@@ -12,76 +12,93 @@
     <div class="app-shell">
         
         <header class="header-top">
-            <div>
-                <div class="date-badge" id="currentDate">Sunday, Dec 7th</div>
-                <div class="greeting">Hello, User</div>
+            <div class="user-balance-container">
+                <div class="coin-icon">🪙</div>
+                <div class="balance-text">
+                    <span class="label">Balance</span>
+                    <span id="userBalance" class="amount">0</span>
+                </div>
             </div>
-            <button class="settings-btn" aria-label="Settings">
-                <ion-icon name="options-outline"></ion-icon>
-            </button>
+            <div class="date-badge" id="currentDate">Dec 7th</div>
         </header>
 
-        <div class="streak-card">
-            <div class="streak-content">
-                <div class="fire-icon-wrapper">
-                    <ion-icon name="flame"></ion-icon>
-                </div>
-                <div class="streak-text">
-                    <h2 id="streakCount">0</h2>
-                    <span>Day Streak</span>
-                </div>
-                <div class="streak-chart-placeholder">
-                   <ion-icon name="trending-up-outline" style="font-size: 40px; color: #333;"></ion-icon>
-                </div>
-            </div>
-            <div class="streak-bar-container">
-                <div class="streak-bar-fill" id="dailyProgressFill" style="width: 0%"></div>
-            </div>
-            <p class="streak-sub">Complete daily goals to keep the flame alive.</p>
-        </div>
-
-        <div id="routinesContainer">
+        <section id="view-tasks" class="app-view active">
+            <div class="section-title">
+                <h1>Just do it daily</h1>
+                <p>Low, Depressed, Anxious? Take action.</p>
             </div>
 
-        <button class="fab" onclick="toggleAddMenu()">
-            <ion-icon name="add"></ion-icon>
-        </button>
+            <div class="input-card">
+                <input type="text" id="taskInput" placeholder="e.g. Deep work sprint" autocomplete="off">
+                <div class="tag-selector">
+                    <button class="tag-btn active" data-priority="High">High</button>
+                    <button class="tag-btn" data-priority="Medium">Med</button>
+                    <button class="tag-btn" data-priority="Low">Low</button>
+                </div>
+                <button class="primary-btn" onclick="app.addTask()">Add Task (+50 🪙)</button>
+            </div>
+
+            <div id="taskList" class="task-list">
+                </div>
+        </section>
+
+        <section id="view-library" class="app-view">
+            <div class="section-title">
+                <h1>Liquid Library</h1>
+                <p>Read to earn. Grow your mind.</p>
+            </div>
+
+            <button class="secondary-btn" onclick="app.toggleBookModal()">+ Add New Book</button>
+
+            <div id="bookGrid" class="book-grid">
+                </div>
+        </section>
+
+        <section id="view-wishlist" class="app-view">
+            <div class="section-title">
+                <h1>Wishlist Store</h1>
+                <p>Redeem your hard work.</p>
+            </div>
+
+            <div class="input-card">
+                <input type="text" id="wishInput" placeholder="Item name (e.g. iPhone 17 Pro)">
+                <input type="number" id="wishCost" placeholder="Cost in coins (e.g. 5000)">
+                <button class="primary-btn" onclick="app.addWishItem()">Add to Wishlist</button>
+            </div>
+
+            <div id="wishGrid" class="wish-grid">
+                </div>
+        </section>
+
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="app.switchView('view-tasks')">
+                <ion-icon name="checkbox"></ion-icon>
+                <span>Tasks</span>
+            </button>
+            <button class="nav-item" onclick="app.switchView('view-library')">
+                <ion-icon name="book"></ion-icon>
+                <span>Library</span>
+            </button>
+            <button class="nav-item" onclick="app.switchView('view-wishlist')">
+                <ion-icon name="cart"></ion-icon>
+                <span>Wishlist</span>
+            </button>
+        </nav>
+
     </div>
 
-    <template id="routineTemplate">
-        <div class="routine-card">
-            <div class="routine-header">
-                <div class="progress-circle">0/0</div>
-                <div class="routine-info">
-                    <span class="routine-title"></span>
-                    <span class="routine-time"></span>
-                </div>
-                <div class="chevron">
-                    <ion-icon name="chevron-down-outline"></ion-icon>
-                </div>
+    <div id="bookModal" class="modal">
+        <div class="modal-content">
+            <h2>Add Book</h2>
+            <input type="text" id="bookTitle" placeholder="Book Title">
+            <input type="text" id="bookAuthor" placeholder="Author">
+            <input type="number" id="bookPages" placeholder="Total Pages">
+            <div class="modal-actions">
+                <button class="cancel-btn" onclick="app.toggleBookModal()">Cancel</button>
+                <button class="confirm-btn" onclick="app.addBook()">Add Book</button>
             </div>
-            <div class="routine-tasks">
-                </div>
         </div>
-    </template>
-
-    <template id="taskTemplate">
-        <div class="task-row">
-            <div class="check-circle"></div>
-            <span class="task-name"></span>
-            <span class="tag-must-do" style="display: none;">MUST DO</span>
-        </div>
-    </template>
-
-    <template id="readingTemplate">
-        <div class="reading-controls">
-            <div class="reading-stats">
-                <span class="pages-read">Page <span class="curr-page">0</span></span>
-                <span class="pages-goal">Goal: <span class="goal-page">0</span></span>
-            </div>
-            <input type="range" class="reading-slider" min="0" value="0">
-        </div>
-    </template>
+    </div>
 
     <script src="app.js"></script>
 </body>
