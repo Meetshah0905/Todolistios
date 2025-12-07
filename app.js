@@ -1,253 +1,232 @@
-const STORAGE_KEY = 'focus_os_v1';
+const DB_KEY = 'focusOS_gamified_v1';
 
-// Initial Data Structure (if nothing in local storage)
 const defaultData = {
-    streak: 0,
-    lastLoginDate: null,
-    routines: [
-        {
-            id: 'morning',
-            title: 'Morning Reset',
-            time: '06:30 - 07:10',
-            expanded: true,
-            tasks: [
-                { id: 't1', title: 'Wake up at 6:30', mustDo: true, done: false },
-                { id: 't2', title: 'Black coffee', mustDo: false, done: false },
-                { id: 't3', title: 'Read 5 pages', mustDo: false, done: false },
-                { id: 't4', title: 'Oil pulling', mustDo: false, done: false },
-                { id: 't5', title: 'Brush teeth', mustDo: false, done: false },
-                { id: 't6', title: 'Shower', mustDo: false, done: false }
-            ]
-        },
-        {
-            id: 'skills',
-            title: 'Skills Sprint',
-            time: '07:10 - 08:20',
-            expanded: false,
-            tasks: [
-                { id: 's1', title: 'Code practice', mustDo: true, done: false },
-                { id: 's2', title: 'Review notes', mustDo: false, done: false }
-            ]
-        },
-        {
-            id: 'gym',
-            title: 'Gym',
-            time: '08:30 - 10:30',
-            expanded: false,
-            tasks: [
-                { id: 'g1', title: 'Warmup', mustDo: false, done: false },
-                { id: 'g2', title: 'Main Lift', mustDo: true, done: false }
-            ]
-        },
-        // NEW READING SECTION
-        {
-            id: 'reading',
-            title: 'Deep Reading',
-            time: '21:00 - 21:30',
-            type: 'reading', // Special type
-            expanded: false,
-            bookName: 'Atomic Habits',
-            currentPage: 45,
-            totalPages: 300,
-            dailyGoalPages: 10
-        }
-    ]
+    balance: 0,
+    tasks: [],
+    books: [], // { id, title, author, totalPages, currPage, color, isFinished }
+    wishlist: [] // { id, title, cost, redeemed }
 };
 
-class FocusOS {
+class App {
     constructor() {
-        this.state = this.loadState();
+        this.data = JSON.parse(localStorage.getItem(DB_KEY)) || defaultData;
+        this.currentView = 'view-tasks';
         this.init();
     }
 
     init() {
-        this.renderDate();
-        this.checkStreak();
-        this.renderRoutines();
-        this.updateStreakUI();
+        this.renderBalance();
+        this.renderTasks();
+        this.renderBooks();
+        this.renderWishlist();
+        this.updateDate();
     }
 
-    loadState() {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        return stored ? JSON.parse(stored) : defaultData;
+    save() {
+        localStorage.setItem(DB_KEY, JSON.stringify(this.data));
+        this.renderBalance(); // Always update balance on save
+        this.renderWishlist(); // Re-check affordability
     }
 
-    saveState() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+    updateDate() {
+        const d = new Date();
+        document.getElementById('currentDate').innerText = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
 
-    renderDate() {
-        const options = { weekday: 'long', month: 'short', day: 'numeric' };
-        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-US', options);
+    switchView(viewId) {
+        // Update DOM
+        document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+        
+        // Update Nav
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        const index = ['view-tasks', 'view-library', 'view-wishlist'].indexOf(viewId);
+        document.querySelectorAll('.nav-item')[index].classList.add('active');
     }
 
-    // --- GAMIFICATION / STREAK LOGIC ---
-    checkStreak() {
-        const today = new Date().toDateString();
-        const lastLogin = this.state.lastLoginDate;
+    renderBalance() {
+        // Animation for numbers
+        const el = document.getElementById('userBalance');
+        el.innerText = this.data.balance.toLocaleString();
+    }
 
-        if (lastLogin !== today) {
-            // It's a new day
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
-            
-            // If last login was NOT yesterday and NOT today, streak breaks
-            if (lastLogin !== yesterday.toDateString() && lastLogin !== null) {
-                this.state.streak = 0;
-            }
-            // Update login date
-            this.state.lastLoginDate = today;
-            
-            // Reset daily tasks (Optional: Un-comment if you want tasks to reset daily)
-             this.resetDailyTasks(); 
-            
-            this.saveState();
+    /* --- TASK LOGIC --- */
+    addTask() {
+        const input = document.getElementById('taskInput');
+        const priorityBtn = document.querySelector('.tag-btn.active');
+        
+        if(!input.value) return;
+
+        this.data.tasks.push({
+            id: Date.now(),
+            title: input.value,
+            priority: priorityBtn ? priorityBtn.dataset.priority : 'Normal',
+            completed: false
+        });
+
+        input.value = '';
+        this.save();
+        this.renderTasks();
+    }
+
+    completeTask(id) {
+        const task = this.data.tasks.find(t => t.id === id);
+        if(task) {
+            this.data.tasks = this.data.tasks.filter(t => t.id !== id);
+            this.data.balance += 50; // REWARD: 50 coins per task
+            this.save();
+            this.renderTasks();
+            alert(`Task Complete! +50 🪙`);
         }
     }
 
-    resetDailyTasks() {
-        this.state.routines.forEach(r => {
-            if(r.tasks) r.tasks.forEach(t => t.done = false);
+    renderTasks() {
+        const list = document.getElementById('taskList');
+        list.innerHTML = '';
+        this.data.tasks.forEach(task => {
+            list.innerHTML += `
+                <div class="task-item">
+                    <div class="task-info">
+                        <h3>${task.title}</h3>
+                        <span>${task.priority}</span>
+                    </div>
+                    <div class="check-circle" onclick="app.completeTask(${task.id})"></div>
+                </div>
+            `;
         });
     }
 
-    calculateDailyProgress() {
-        let total = 0;
-        let completed = 0;
-        
-        this.state.routines.forEach(r => {
-            if (r.tasks) {
-                total += r.tasks.length;
-                completed += r.tasks.filter(t => t.done).length;
+    /* --- LIBRARY LOGIC --- */
+    toggleBookModal() {
+        document.getElementById('bookModal').classList.toggle('open');
+    }
+
+    addBook() {
+        const title = document.getElementById('bookTitle').value;
+        const author = document.getElementById('bookAuthor').value;
+        const pages = document.getElementById('bookPages').value;
+
+        if(!title || !pages) return;
+
+        // Random neon color for liquid effect
+        const colors = ['#FF2D55', '#5856D6', '#007AFF', '#30D158', '#FF9500', '#FFD60A'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+        this.data.books.push({
+            id: Date.now(),
+            title, author, 
+            totalPages: parseInt(pages), 
+            currPage: 0,
+            color: randomColor,
+            isFinished: false
+        });
+
+        this.toggleBookModal();
+        this.save();
+        this.renderBooks();
+    }
+
+    updatePageProgress(id, value) {
+        const book = this.data.books.find(b => b.id === id);
+        if(book) {
+            book.currPage = parseInt(value);
+            
+            // Check for completion
+            if(book.currPage >= book.totalPages && !book.isFinished) {
+                book.isFinished = true;
+                book.currPage = book.totalPages;
+                this.data.balance += 500; // BIG REWARD
+                alert(`Book Finished! +500 🪙`);
             }
-        });
-        
-        if (total === 0) return 0;
-        return (completed / total) * 100;
-    }
-
-    updateStreakUI() {
-        document.getElementById('streakCount').innerText = this.state.streak;
-        const progress = this.calculateDailyProgress();
-        document.getElementById('dailyProgressFill').style.width = `${progress}%`;
-        
-        // Gamification: Increase streak if 100% done (simple logic)
-        // In a real app, you might only increment streak at end of day
-        if (progress === 100 && this.state.streakIncremented !== new Date().toDateString()) {
-             // Example logic: this.state.streak++;
-             // this.state.streakIncremented = new Date().toDateString();
-             // this.saveState();
+            this.save();
+            this.renderBooks(); // Re-render to update UI text
         }
     }
 
-    // --- RENDERING ROUTINES ---
-    renderRoutines() {
-        const container = document.getElementById('routinesContainer');
-        container.innerHTML = '';
-        const routineTemplate = document.getElementById('routineTemplate');
+    renderBooks() {
+        const grid = document.getElementById('bookGrid');
+        grid.innerHTML = '';
+        this.data.books.forEach(book => {
+            if(book.isFinished) return; // Optional: hide finished books or move to archive
 
-        this.state.routines.forEach((routine, index) => {
-            const clone = routineTemplate.content.cloneNode(true);
-            const card = clone.querySelector('.routine-card');
+            const percent = Math.round((book.currPage / book.totalPages) * 100);
             
-            // Populate Header
-            clone.querySelector('.routine-title').innerText = routine.title;
-            clone.querySelector('.routine-time').innerText = routine.time;
-            
-            // Handle Expansion
-            if (routine.expanded) card.classList.add('open');
-            clone.querySelector('.routine-header').addEventListener('click', () => {
-                routine.expanded = !routine.expanded;
-                this.saveState();
-                this.renderRoutines(); // Re-render to show animation state
-            });
-
-            // CONTENT
-            const tasksContainer = clone.querySelector('.routine-tasks');
-
-            if (routine.type === 'reading') {
-                this.renderReadingSection(routine, tasksContainer);
-                // Update Badge for reading
-                const badge = clone.querySelector('.progress-circle');
-                badge.innerText = '📖';
-                badge.style.borderColor = 'var(--accent-blue)';
-                badge.style.color = 'var(--accent-blue)';
-            } else {
-                this.renderTasks(routine, tasksContainer);
-                // Update Badge for tasks
-                const completedCount = routine.tasks.filter(t => t.done).length;
-                const badge = clone.querySelector('.progress-circle');
-                badge.innerText = `${completedCount}/${routine.tasks.length}`;
-                
-                if (completedCount === routine.tasks.length && routine.tasks.length > 0) {
-                    badge.classList.add('completed');
-                }
-            }
-
-            container.appendChild(clone);
+            grid.innerHTML += `
+                <div class="liquid-card" style="--book-color: ${book.color}">
+                    <div class="liquid-bg"></div>
+                    <div class="book-content">
+                        <div class="book-title">${book.title}</div>
+                        <div class="book-author">${book.author}</div>
+                        
+                        <input type="range" class="book-slider" 
+                            min="0" max="${book.totalPages}" value="${book.currPage}"
+                            onchange="app.updatePageProgress(${book.id}, this.value)">
+                        
+                        <div class="book-stats">
+                            <span>${percent}%</span>
+                            <span>${book.currPage}/${book.totalPages} p</span>
+                        </div>
+                    </div>
+                </div>
+            `;
         });
     }
 
-    renderTasks(routine, container) {
-        const taskTemplate = document.getElementById('taskTemplate');
-        
-        routine.tasks.forEach(task => {
-            const tClone = taskTemplate.content.cloneNode(true);
-            const row = tClone.querySelector('.task-row');
-            const check = tClone.querySelector('.check-circle');
-            
-            tClone.querySelector('.task-name').innerText = task.title;
-            
-            if (task.mustDo) {
-                tClone.querySelector('.tag-must-do').style.display = 'block';
-            }
+    /* --- WISHLIST LOGIC --- */
+    addWishItem() {
+        const name = document.getElementById('wishInput').value;
+        const cost = parseInt(document.getElementById('wishCost').value);
 
-            if (task.done) {
-                check.classList.add('checked');
-                row.classList.add('done');
-            }
+        if(!name || !cost) return;
 
-            // Interaction
-            row.addEventListener('click', () => {
-                task.done = !task.done;
-                this.saveState();
-                this.renderRoutines(); // Re-render to update counts
-                this.updateStreakUI();
-            });
-
-            container.appendChild(tClone);
-        });
+        this.data.wishlist.push({ id: Date.now(), title: name, cost: cost, redeemed: false });
+        this.save();
+        this.renderWishlist();
     }
 
-    renderReadingSection(routine, container) {
-        const template = document.getElementById('readingTemplate');
-        const clone = template.content.cloneNode(true);
-        
-        const slider = clone.querySelector('.reading-slider');
-        const currPageEl = clone.querySelector('.curr-page');
-        const goalEl = clone.querySelector('.goal-page');
-        
-        slider.max = routine.totalPages;
-        slider.value = routine.currentPage;
-        currPageEl.innerText = routine.currentPage;
-        goalEl.innerText = routine.totalPages; // Or dailyGoalPages
+    redeemItem(id) {
+        const item = this.data.wishlist.find(i => i.id === id);
+        if(item && this.data.balance >= item.cost) {
+            if(confirm(`Buy ${item.title} for ${item.cost} coins?`)) {
+                this.data.balance -= item.cost;
+                item.redeemed = true;
+                this.save();
+                this.renderWishlist();
+                alert('Item Redeemed! Treat yourself.');
+            }
+        }
+    }
 
-        slider.addEventListener('input', (e) => {
-            routine.currentPage = parseInt(e.target.value);
-            currPageEl.innerText = routine.currentPage;
-            this.saveState();
+    renderWishlist() {
+        const grid = document.getElementById('wishGrid');
+        grid.innerHTML = '';
+
+        this.data.wishlist.forEach(item => {
+            if(item.redeemed) return; // Hide purchased items
+
+            const canAfford = this.data.balance >= item.cost;
+            const btnClass = canAfford ? 'buy-btn can-afford' : 'buy-btn';
+            const btnText = canAfford ? 'Buy' : 'Locked';
+
+            grid.innerHTML += `
+                <div class="wish-card">
+                    <div class="wish-details">
+                        <h3>${item.title}</h3>
+                        <span class="wish-cost">${item.cost.toLocaleString()} 🪙</span>
+                    </div>
+                    <button class="${btnClass}" onclick="app.redeemItem(${item.id})">${btnText}</button>
+                </div>
+            `;
         });
-
-        container.appendChild(clone);
     }
 }
 
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    new FocusOS();
+// Logic for Tag Selection in Task View
+document.querySelectorAll('.tag-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+    });
 });
 
-// Placeholder for FAB
-function toggleAddMenu() {
-    alert("Add Task feature coming soon!");
-}
+const app = new App();
