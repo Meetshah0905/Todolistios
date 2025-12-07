@@ -15,7 +15,7 @@ body {
     color: var(--text-primary);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin: 0;
-    padding-bottom: 100px;
+    padding-bottom: 110px; /* Ensures content isn't hidden behind nav */
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -50,6 +50,8 @@ body {
 .balance-text .label { font-size: 10px; color: var(--gold); text-transform: uppercase; }
 .balance-text .amount { font-size: 18px; font-weight: 700; color: #FFF; }
 
+.reset-btn { background: none; border: none; color: #333; font-size: 20px; cursor: pointer; }
+
 /* VIEWS */
 .app-view { display: none; animation: fadeIn 0.3s ease; }
 .app-view.active { display: block; }
@@ -68,7 +70,7 @@ body {
     gap: 12px;
 }
 
-.field-label { font-size: 12px; color: var(--text-secondary); margin-left: 4px; }
+.field-label { font-size: 12px; color: var(--text-secondary); margin-left: 4px; margin-bottom: -8px; }
 
 input {
     background: #000;
@@ -84,8 +86,8 @@ input {
 
 input:focus { border-color: var(--accent); }
 
-.row-inputs { display: flex; gap: 15px; }
-.time-input-group, .priority-group { flex: 1; }
+.row-inputs { display: flex; gap: 15px; flex-wrap: wrap; }
+.time-input-group, .priority-group { flex: 1; min-width: 120px; }
 .time-inputs { display: flex; align-items: center; gap: 5px; }
 .time-inputs input { text-align: center; }
 
@@ -99,6 +101,7 @@ input:focus { border-color: var(--accent); }
     border-radius: 10px;
     cursor: pointer;
     font-size: 13px;
+    transition: all 0.2s;
 }
 .tag-btn.active { background: #333; color: #fff; border-color: #555; }
 
@@ -113,6 +116,7 @@ input:focus { border-color: var(--accent); }
     cursor: pointer;
     margin-top: 10px;
     box-shadow: 0 0 20px var(--accent-glow);
+    width: 100%;
 }
 
 .secondary-btn {
@@ -156,9 +160,11 @@ input:focus { border-color: var(--accent); }
 .task-points { color: var(--gold); font-weight: bold; }
 
 .check-circle {
-    width: 24px; height: 24px; border-radius: 50%;
+    width: 28px; height: 28px; border-radius: 50%;
     border: 2px solid #555; cursor: pointer; flex-shrink: 0;
+    position: relative; z-index: 10;
 }
+.check-circle:active { background: #333; }
 
 /* LIBRARY */
 .book-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
@@ -176,7 +182,7 @@ input:focus { border-color: var(--accent); }
 .book-content { position: relative; z-index: 1; }
 .book-title { font-weight: 700; margin-bottom: 5px; line-height: 1.2; }
 .book-slider { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin-top: 10px; -webkit-appearance: none; }
-.book-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: #fff; border-radius: 50%; }
+.book-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: #fff; border-radius: 50%; cursor: pointer; }
 
 /* WISHLIST */
 .wish-grid { display: grid; gap: 15px; }
@@ -185,29 +191,31 @@ input:focus { border-color: var(--accent); }
     border-radius: 16px; padding: 15px; display: flex; justify-content: space-between; align-items: center;
 }
 .buy-btn {
-    background: #333; color: #888; border: none; padding: 8px 16px; border-radius: 20px;
+    background: #333; color: #888; border: none; padding: 10px 20px; border-radius: 20px;
     font-weight: 700; cursor: not-allowed;
 }
 .buy-btn.can-afford { background: var(--gold); color: #000; cursor: pointer; }
 
-/* NAV */
+/* NAV - Fixed Z-Index */
 .bottom-nav {
     position: fixed; bottom: 0; left: 0; right: 0;
     background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(20px);
     border-top: 1px solid #333; display: flex; justify-content: space-around;
-    padding: 15px 0 30px; z-index: 100;
+    padding: 15px 0 30px; z-index: 999;
 }
 .nav-item {
     background: none; border: none; color: #555;
     display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px;
+    cursor: pointer; padding: 10px;
 }
 .nav-item.active { color: #fff; }
-.nav-item ion-icon { font-size: 24px; }
+.nav-item ion-icon { font-size: 24px; pointer-events: none; }
 
-/* MODAL */
+/* MODAL - Fixed Z-Index */
 .modal {
     position: fixed; top:0; left:0; width:100%; height:100%;
-    background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 200;
+    background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; 
+    z-index: 2000;
 }
 .modal.open { display: flex; }
 .modal-content { background: #1C1C1E; padding: 25px; border-radius: 20px; width: 85%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; }
